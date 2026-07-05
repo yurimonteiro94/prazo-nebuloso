@@ -160,13 +160,7 @@ Experimento criarExperimentoPadrao(void) {
     experimento = criarExperimentoVazio();
     heuristica = criarHeuristicaConstrutivaFuzzy();
 
-    inicializarExperimento(
-        &experimento,
-        (IdentificadorDeExperimento) IDENTIFICADOR_EXPERIMENTO_PADRAO,
-        NOME_EXPERIMENTO_PADRAO,
-        DESCRICAO_EXPERIMENTO_PADRAO,
-        heuristica
-    );
+    inicializarExperimento(&experimento,(IdentificadorDeExperimento) IDENTIFICADOR_EXPERIMENTO_PADRAO,NOME_EXPERIMENTO_PADRAO,DESCRICAO_EXPERIMENTO_PADRAO,heuristica);
 
     experimentoAdicionarArquivoDeInstancia(&experimento,(InteiroPositivoDe8Bits) 0,NOME_ARQUIVO_SCH10);
     experimentoAdicionarArquivoDeInstancia(&experimento,(InteiroPositivoDe8Bits) 1,NOME_ARQUIVO_SCH20);
