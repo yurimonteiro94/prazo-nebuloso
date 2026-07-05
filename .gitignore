@@ -1,0 +1,14 @@
+*.exe
+*.o
+*.obj
+*.out
+*.csv
+*.html
+*.log
+*.tmp
+*.docx
+*.pdf
+resultados/*
+!resultados/.gitkeep
+.vscode/
+.idea/
