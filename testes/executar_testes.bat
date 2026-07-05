@@ -209,5 +209,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_gerenciador_fuzzy...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_gerenciador_fuzzy.c services\gerenciador_fuzzy\gerenciador_fuzzy.c model\entidades\tarefa\tarefa.c -o testes\teste_gerenciador_fuzzy.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_gerenciador_fuzzy.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_gerenciador_fuzzy...
+testes\teste_gerenciador_fuzzy.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_gerenciador_fuzzy.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0
