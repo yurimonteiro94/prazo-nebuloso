@@ -57,5 +57,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_heuristica...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_heuristica.c model\entidades\heuristica\heuristica.c -o testes\teste_heuristica.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_heuristica.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_heuristica...
+testes\teste_heuristica.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_heuristica.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0

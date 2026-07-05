@@ -16,6 +16,7 @@ typedef int32_t InteiroComSinalDe32Bits;
 typedef int64_t InteiroComSinalDe64Bits;
 
 typedef InteiroPositivoDe16Bits IdentificadorDeTarefa;
+typedef InteiroPositivoDe16Bits IdentificadorDeHeuristica;
 typedef InteiroPositivoDe16Bits QuantidadeDeTarefas;
 typedef InteiroPositivoDe8Bits TempoDeProcessamento;
 typedef InteiroPositivoDe8Bits Penalidade;
@@ -45,6 +46,8 @@ typedef InteiroPositivoDe64Bits Custo;
 #define TAMANHO_MAXIMO_DE_LINHA 256
 #define TAMANHO_MAXIMO_DE_CAMINHO 512
 #define TAMANHO_MAXIMO_DE_NOME_DE_ARQUIVO 128
+#define TAMANHO_MAXIMO_DE_NOME_DE_HEURISTICA 128
+#define TAMANHO_MAXIMO_DE_DESCRICAO_DE_HEURISTICA 512
 
 #define CAMINHO_DA_PASTA_DE_INSTANCIAS "instancias"
 #define CAMINHO_DA_PASTA_DE_RESULTADOS "resultados"
@@ -56,5 +59,9 @@ typedef InteiroPositivoDe64Bits Custo;
 #define NOME_ARQUIVO_SCH200 "sch200.txt"
 #define NOME_ARQUIVO_SCH500 "sch500.txt"
 #define NOME_ARQUIVO_SCH1000 "sch1000.txt"
+
+#define IDENTIFICADOR_HEURISTICA_CONSTRUTIVA_FUZZY 1
+#define NOME_HEURISTICA_CONSTRUTIVA_FUZZY "Heuristica Construtiva Fuzzy de Dupla Frente Temporal"
+#define DESCRICAO_HEURISTICA_CONSTRUTIVA_FUZZY "Heuristica construtiva baseada em logica nebulosa para construir uma sequencia de tarefas considerando adiantamento, atraso e data comum de entrega."
 
 #endif
