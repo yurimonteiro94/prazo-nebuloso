@@ -152,5 +152,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_instancia_dao...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_instancia_dao.c model\dao\instancia_dao\instancia_dao.c model\entidades\instancia\instancia.c model\entidades\tarefa\tarefa.c services\ferramentas\ferramentas.c services\gerenciador_de_arquivos\gerenciador_de_arquivos.c -o testes\teste_instancia_dao.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_instancia_dao.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_instancia_dao...
+testes\teste_instancia_dao.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_instancia_dao.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0
