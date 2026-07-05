@@ -74,4 +74,8 @@ typedef double TempoComputacionalEmMilissegundos;
 #define NOME_HEURISTICA_CONSTRUTIVA_FUZZY "Heuristica Construtiva Fuzzy de Dupla Frente Temporal"
 #define DESCRICAO_HEURISTICA_CONSTRUTIVA_FUZZY "Heuristica construtiva baseada em logica nebulosa para construir uma sequencia de tarefas considerando adiantamento, atraso e data comum de entrega."
 
+#define IDENTIFICADOR_EXPERIMENTO_PADRAO 1
+#define NOME_EXPERIMENTO_PADRAO "Experimento Principal"
+#define DESCRICAO_EXPERIMENTO_PADRAO "Experimento com sete arquivos de instancias da OR-Library, dez problemas por arquivo e quatro valores de h."
+
 #endif
