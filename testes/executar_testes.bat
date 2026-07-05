@@ -171,5 +171,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_gerenciador_de_custos...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_gerenciador_de_custos.c services\gerenciador_de_custos\gerenciador_de_custos.c model\entidades\instancia\instancia.c model\entidades\solucao\solucao.c model\entidades\tarefa\tarefa.c -o testes\teste_gerenciador_de_custos.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_gerenciador_de_custos.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_gerenciador_de_custos...
+testes\teste_gerenciador_de_custos.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_gerenciador_de_custos.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0
