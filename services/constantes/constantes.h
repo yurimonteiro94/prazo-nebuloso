@@ -52,6 +52,7 @@ typedef double TempoComputacionalEmMilissegundos;
 #define MILISSEGUNDOS_POR_SEGUNDO 1000.0
 
 #define TAMANHO_MAXIMO_DE_LINHA 256
+#define TAMANHO_MAXIMO_DE_LINHA_CSV 1024
 #define TAMANHO_MAXIMO_DE_CAMINHO 512
 #define TAMANHO_MAXIMO_DE_NOME_DE_ARQUIVO 128
 #define TAMANHO_MAXIMO_DE_NOME_DE_HEURISTICA 128
@@ -69,6 +70,10 @@ typedef double TempoComputacionalEmMilissegundos;
 #define NOME_ARQUIVO_SCH200 "sch200.txt"
 #define NOME_ARQUIVO_SCH500 "sch500.txt"
 #define NOME_ARQUIVO_SCH1000 "sch1000.txt"
+
+#define NOME_ARQUIVO_RESULTADOS_EXECUCOES "resultados_execucoes.csv"
+#define NOME_ARQUIVO_MEDIAS_POR_N_H "medias_por_n_h.csv"
+#define NOME_ARQUIVO_RELATORIO_HTML "relatorio_resultados.html"
 
 #define IDENTIFICADOR_HEURISTICA_CONSTRUTIVA_FUZZY 1
 #define NOME_HEURISTICA_CONSTRUTIVA_FUZZY "Heuristica Construtiva Fuzzy de Dupla Frente Temporal"

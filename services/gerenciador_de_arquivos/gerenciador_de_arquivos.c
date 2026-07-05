@@ -34,6 +34,22 @@ FILE *gerenciadorDeArquivosAbrirArquivoParaEscrita(const char *caminhoDoArquivo)
     return arquivo;
 }
 
+FILE *gerenciadorDeArquivosAbrirArquivoParaAcrescimo(const char *caminhoDoArquivo) {
+    FILE *arquivo;
+
+    if(caminhoDoArquivo == NULL) {
+        return NULL;
+    }
+
+    else if(caminhoDoArquivo[0] == '\0') {
+        return NULL;
+    }
+
+    arquivo = fopen(caminhoDoArquivo,"a");
+
+    return arquivo;
+}
+
 Boolean gerenciadorDeArquivosLerLinha(FILE *arquivo,char *linha,InteiroPositivoDe32Bits tamanhoDaLinha) {
     if(arquivo == NULL) {
         return FALSO;
