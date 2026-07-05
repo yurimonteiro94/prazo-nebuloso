@@ -6,8 +6,27 @@ A proposta principal e uma heuristica construtiva baseada em logica nebulosa.
 
 ## Organizacao
 
-- model: entidades e estruturas de dados.
-- dao: leitura e gravacao de dados especificos do problema.
-- services: constantes, ferramentas, leitura generica, gravacao generica, sistema fuzzy, custo e tempo.
+- model: camada de dados do projeto.
+- model/entidades: entidades principais do problema.
+- model/dao: acesso aos dados das instancias e resultados.
+- services: modulos auxiliares com funcoes de proposito geral.
 - controller: coordenacao dos experimentos e da heuristica.
 - view: exibicao de mensagens no console.
+
+## Entidades
+
+- Tarefa.
+- Instancia.
+- Solucao.
+- Heuristica.
+- Experimento.
+- ResultadoDeExecucao.
+
+## Services
+
+- constantes.
+- ferramentas.
+- gerenciador_de_arquivos.
+- gerenciador_fuzzy.
+- gerenciador_de_custos.
+- gerenciador_de_tempo.
