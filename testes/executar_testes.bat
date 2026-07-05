@@ -114,5 +114,43 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_ferramentas...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_ferramentas.c services\ferramentas\ferramentas.c -o testes\teste_ferramentas.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_ferramentas.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_ferramentas...
+testes\teste_ferramentas.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_ferramentas.
+    exit /b 1
+)
+
+echo.
+echo Compilando teste_gerenciador_de_arquivos...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_gerenciador_de_arquivos.c services\ferramentas\ferramentas.c services\gerenciador_de_arquivos\gerenciador_de_arquivos.c -o testes\teste_gerenciador_de_arquivos.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_gerenciador_de_arquivos.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_gerenciador_de_arquivos...
+testes\teste_gerenciador_de_arquivos.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_gerenciador_de_arquivos.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0
