@@ -228,5 +228,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_controller_heuristica...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_controller_heuristica.c controller\controller_heuristica\controller_heuristica.c model\dao\instancia_dao\instancia_dao.c model\entidades\heuristica\heuristica.c model\entidades\instancia\instancia.c model\entidades\solucao\solucao.c model\entidades\tarefa\tarefa.c services\ferramentas\ferramentas.c services\gerenciador_de_arquivos\gerenciador_de_arquivos.c services\gerenciador_de_custos\gerenciador_de_custos.c services\gerenciador_fuzzy\gerenciador_fuzzy.c -o testes\teste_controller_heuristica.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_controller_heuristica.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_controller_heuristica...
+testes\teste_controller_heuristica.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_controller_heuristica.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0
