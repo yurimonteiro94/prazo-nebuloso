@@ -17,7 +17,10 @@ typedef int64_t InteiroComSinalDe64Bits;
 
 typedef InteiroPositivoDe16Bits IdentificadorDeTarefa;
 typedef InteiroPositivoDe16Bits IdentificadorDeHeuristica;
+typedef InteiroPositivoDe16Bits IdentificadorDeExperimento;
+typedef InteiroPositivoDe16Bits IdentificadorDeExecucao;
 typedef InteiroPositivoDe16Bits QuantidadeDeTarefas;
+
 typedef InteiroPositivoDe8Bits TempoDeProcessamento;
 typedef InteiroPositivoDe8Bits Penalidade;
 typedef InteiroPositivoDe8Bits FatorH;
@@ -25,6 +28,9 @@ typedef InteiroPositivoDe8Bits FatorH;
 typedef InteiroPositivoDe32Bits SomaDosTemposDeProcessamento;
 typedef InteiroPositivoDe32Bits DataDeEntregaComum;
 typedef InteiroPositivoDe64Bits Custo;
+
+typedef double TempoComputacionalEmSegundos;
+typedef double TempoComputacionalEmMilissegundos;
 
 #define FALSO 0x00
 #define VERDADEIRO 0x01
@@ -43,11 +49,15 @@ typedef InteiroPositivoDe64Bits Custo;
 #define FATOR_H_08 8
 #define FATOR_DE_ESCALA_H 10
 
+#define MILISSEGUNDOS_POR_SEGUNDO 1000.0
+
 #define TAMANHO_MAXIMO_DE_LINHA 256
 #define TAMANHO_MAXIMO_DE_CAMINHO 512
 #define TAMANHO_MAXIMO_DE_NOME_DE_ARQUIVO 128
 #define TAMANHO_MAXIMO_DE_NOME_DE_HEURISTICA 128
 #define TAMANHO_MAXIMO_DE_DESCRICAO_DE_HEURISTICA 512
+#define TAMANHO_MAXIMO_DE_NOME_DE_EXPERIMENTO 128
+#define TAMANHO_MAXIMO_DE_DESCRICAO_DE_EXPERIMENTO 512
 
 #define CAMINHO_DA_PASTA_DE_INSTANCIAS "instancias"
 #define CAMINHO_DA_PASTA_DE_RESULTADOS "resultados"
