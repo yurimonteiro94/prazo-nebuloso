@@ -266,5 +266,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_controller_experimento...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_controller_experimento.c controller\controller_experimento\controller_experimento.c controller\controller_heuristica\controller_heuristica.c model\dao\instancia_dao\instancia_dao.c model\dao\resultado_dao\resultado_dao.c model\entidades\experimento\experimento.c model\entidades\heuristica\heuristica.c model\entidades\instancia\instancia.c model\entidades\resultado_de_execucao\resultado_de_execucao.c model\entidades\solucao\solucao.c model\entidades\tarefa\tarefa.c services\ferramentas\ferramentas.c services\gerenciador_de_arquivos\gerenciador_de_arquivos.c services\gerenciador_de_custos\gerenciador_de_custos.c services\gerenciador_de_tempo\gerenciador_de_tempo.c services\gerenciador_fuzzy\gerenciador_fuzzy.c -o testes\teste_controller_experimento.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_controller_experimento.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_controller_experimento...
+testes\teste_controller_experimento.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_controller_experimento.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0
