@@ -14,7 +14,26 @@ testes\teste_tarefa.exe
 
 if errorlevel 1 (
     echo.
-    echo Existem testes com erro.
+    echo Existem testes com erro em teste_tarefa.
+    exit /b 1
+)
+
+echo.
+echo Compilando teste_instancia...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_instancia.c model\entidades\tarefa\tarefa.c model\entidades\instancia\instancia.c -o testes\teste_instancia.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_instancia.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_instancia...
+testes\teste_instancia.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_instancia.
     exit /b 1
 )
 
