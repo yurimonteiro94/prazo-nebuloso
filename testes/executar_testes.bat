@@ -38,5 +38,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo Compilando teste_solucao...
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 testes\teste_solucao.c model\entidades\solucao\solucao.c -o testes\teste_solucao.exe
+
+if errorlevel 1 (
+    echo Erro ao compilar teste_solucao.
+    exit /b 1
+)
+
+echo.
+echo Executando teste_solucao...
+testes\teste_solucao.exe
+
+if errorlevel 1 (
+    echo.
+    echo Existem testes com erro em teste_solucao.
+    exit /b 1
+)
+
+echo.
 echo Todos os testes passaram.
 exit /b 0
