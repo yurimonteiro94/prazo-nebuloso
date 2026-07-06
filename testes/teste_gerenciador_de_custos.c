@@ -5,386 +5,120 @@
 #include "../model/entidades/tarefa/tarefa.h"
 #include "../services/gerenciador_de_custos/gerenciador_de_custos.h"
 
-static Boolean prepararInstanciaDeTeste(Instancia *instancia) {
-    if(inicializarInstancia(instancia,NOME_ARQUIVO_SCH10,(InteiroPositivoDe16Bits) 1,(QuantidadeDeTarefas) 3) == FALSO) {
-        return FALSO;
-    }
+static void montarInstanciaDeTeste(Instancia *instancia,Tarefa *tarefas,Solucao *solucao,IdentificadorDeTarefa *sequencia) {
+    tarefas[0] = criarTarefa(1,3,1,5);
+    tarefas[1] = criarTarefa(2,2,1,5);
 
-    if(instanciaAdicionarTarefa(
-        instancia,
-        (QuantidadeDeTarefas) 0,
-        criarTarefa(
-            (IdentificadorDeTarefa) 1,
-            (TempoDeProcessamento) 10,
-            (Penalidade) 4,
-            (Penalidade) 8
-        )
-    ) == FALSO) {
-        return FALSO;
-    }
+    sequencia[0] = 1;
+    sequencia[1] = 2;
 
-    if(instanciaAdicionarTarefa(
-        instancia,
-        (QuantidadeDeTarefas) 1,
-        criarTarefa(
-            (IdentificadorDeTarefa) 2,
-            (TempoDeProcessamento) 20,
-            (Penalidade) 5,
-            (Penalidade) 6
-        )
-    ) == FALSO) {
-        return FALSO;
-    }
+    (*instancia).identificadorDaInstancia = 1;
+    (*instancia).quantidadeDeTarefas = 2;
+    (*instancia).tarefas = tarefas;
+    (*instancia).somaDosTemposDeProcessamento = 5;
 
-    if(instanciaAdicionarTarefa(
-        instancia,
-        (QuantidadeDeTarefas) 2,
-        criarTarefa(
-            (IdentificadorDeTarefa) 3,
-            (TempoDeProcessamento) 30,
-            (Penalidade) 7,
-            (Penalidade) 9
-        )
-    ) == FALSO) {
-        return FALSO;
-    }
-
-    return VERDADEIRO;
+    (*solucao).quantidadeDeTarefas = 2;
+    (*solucao).quantidadeDeTarefasAlocadas = 2;
+    (*solucao).sequenciaDeTarefas = sequencia;
 }
 
-static Boolean prepararSolucao123(Solucao *solucao) {
-    if(inicializarSolucao(solucao,(QuantidadeDeTarefas) 3) == FALSO) {
-        return FALSO;
-    }
-
-    if(solucaoDefinirTarefaNaPosicao(solucao,(QuantidadeDeTarefas) 0,(IdentificadorDeTarefa) 1) == FALSO) {
-        return FALSO;
-    }
-
-    if(solucaoDefinirTarefaNaPosicao(solucao,(QuantidadeDeTarefas) 1,(IdentificadorDeTarefa) 2) == FALSO) {
-        return FALSO;
-    }
-
-    if(solucaoDefinirTarefaNaPosicao(solucao,(QuantidadeDeTarefas) 2,(IdentificadorDeTarefa) 3) == FALSO) {
-        return FALSO;
-    }
-
-    return VERDADEIRO;
-}
-
-static Boolean prepararSolucao321(Solucao *solucao) {
-    if(inicializarSolucao(solucao,(QuantidadeDeTarefas) 3) == FALSO) {
-        return FALSO;
-    }
-
-    if(solucaoDefinirTarefaNaPosicao(solucao,(QuantidadeDeTarefas) 0,(IdentificadorDeTarefa) 3) == FALSO) {
-        return FALSO;
-    }
-
-    if(solucaoDefinirTarefaNaPosicao(solucao,(QuantidadeDeTarefas) 1,(IdentificadorDeTarefa) 2) == FALSO) {
-        return FALSO;
-    }
-
-    if(solucaoDefinirTarefaNaPosicao(solucao,(QuantidadeDeTarefas) 2,(IdentificadorDeTarefa) 1) == FALSO) {
-        return FALSO;
-    }
-
-    return VERDADEIRO;
-}
-
-static int testarCalculoDeCustoDaSolucao123(void) {
+static int testarCustoComInstanteInicialZero(void) {
     Instancia instancia;
+    Tarefa tarefas[2];
     Solucao solucao;
+    IdentificadorDeTarefa sequencia[2];
     Custo custo;
-    Boolean resultado;
 
-    instancia = criarInstanciaVazia();
-    solucao = criarSolucaoVazia();
-    custo = 0;
+    montarInstanciaDeTeste(&instancia,tarefas,&solucao,sequencia);
 
-    if(prepararInstanciaDeTeste(&instancia) == FALSO) {
-        printf("[ERRO] Instancia de teste nao foi preparada.\n");
-
+    if(gerenciadorDeCustosCalcularCustoDaSolucaoComInstanteInicial(&instancia,&solucao,10,0,&custo) == FALSO) {
+        printf("[ERRO] Calculo de custo com instante inicial zero falhou.\n");
         return 1;
     }
 
-    if(prepararSolucao123(&solucao) == FALSO) {
-        printf("[ERRO] Solucao 1-2-3 nao foi preparada.\n");
-        liberarInstancia(&instancia);
-
+    if(custo != 12) {
+        printf("[ERRO] Custo com instante inicial zero deveria ser 12, mas foi %llu.\n",(unsigned long long) custo);
         return 1;
     }
 
-    resultado = gerenciadorDeCustosCalcularCustoDaSolucao(
-        &instancia,
-        &solucao,
-        (DataDeEntregaComum) 36,
-        &custo
-    );
-
-    if(resultado == FALSO) {
-        printf("[ERRO] Calculo de custo da solucao 1-2-3 deveria funcionar.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
-        return 1;
-    }
-
-    if(custo != 350) {
-        printf("[ERRO] Custo da solucao 1-2-3 deveria ser 350.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
-        return 1;
-    }
-
-    liberarSolucao(&solucao);
-    liberarInstancia(&instancia);
-
-    printf("[OK] Calculo de custo da solucao 1-2-3.\n");
+    printf("[OK] Custo com instante inicial zero.\n");
 
     return 0;
 }
 
-static int testarCalculoDeCustoDaSolucao321(void) {
+static int testarMelhorInstanteInicial(void) {
     Instancia instancia;
+    Tarefa tarefas[2];
     Solucao solucao;
-    Custo custo;
-    Boolean resultado;
+    IdentificadorDeTarefa sequencia[2];
+    InteiroPositivoDe32Bits melhorInstanteInicial;
 
-    instancia = criarInstanciaVazia();
-    solucao = criarSolucaoVazia();
-    custo = 0;
+    montarInstanciaDeTeste(&instancia,tarefas,&solucao,sequencia);
 
-    if(prepararInstanciaDeTeste(&instancia) == FALSO) {
-        printf("[ERRO] Instancia de teste nao foi preparada.\n");
-
+    if(gerenciadorDeCustosEncontrarMelhorInstanteInicialDaSolucao(&instancia,&solucao,10,&melhorInstanteInicial) == FALSO) {
+        printf("[ERRO] Busca do melhor instante inicial falhou.\n");
         return 1;
     }
 
-    if(prepararSolucao321(&solucao) == FALSO) {
-        printf("[ERRO] Solucao 3-2-1 nao foi preparada.\n");
-        liberarInstancia(&instancia);
-
+    if(melhorInstanteInicial != 5) {
+        printf("[ERRO] Melhor instante inicial deveria ser 5, mas foi %u.\n",(unsigned int) melhorInstanteInicial);
         return 1;
     }
 
-    resultado = gerenciadorDeCustosCalcularCustoDaSolucao(
-        &instancia,
-        &solucao,
-        (DataDeEntregaComum) 36,
-        &custo
-    );
-
-    if(resultado == FALSO) {
-        printf("[ERRO] Calculo de custo da solucao 3-2-1 deveria funcionar.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
-        return 1;
-    }
-
-    if(custo != 318) {
-        printf("[ERRO] Custo da solucao 3-2-1 deveria ser 318.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
-        return 1;
-    }
-
-    liberarSolucao(&solucao);
-    liberarInstancia(&instancia);
-
-    printf("[OK] Calculo de custo da solucao 3-2-1.\n");
+    printf("[OK] Melhor instante inicial da solucao.\n");
 
     return 0;
 }
 
-static int testarCustoZeroQuandoTodasConcluemEmD(void) {
+static int testarCustoComMelhorDeslocamento(void) {
     Instancia instancia;
+    Tarefa tarefas[2];
     Solucao solucao;
+    IdentificadorDeTarefa sequencia[2];
     Custo custo;
-    Boolean resultado;
 
-    instancia = criarInstanciaVazia();
-    solucao = criarSolucaoVazia();
-    custo = 999;
+    montarInstanciaDeTeste(&instancia,tarefas,&solucao,sequencia);
 
-    inicializarInstancia(&instancia,NOME_ARQUIVO_SCH10,(InteiroPositivoDe16Bits) 1,(QuantidadeDeTarefas) 1);
-
-    instanciaAdicionarTarefa(
-        &instancia,
-        (QuantidadeDeTarefas) 0,
-        criarTarefa(
-            (IdentificadorDeTarefa) 1,
-            (TempoDeProcessamento) 10,
-            (Penalidade) 4,
-            (Penalidade) 8
-        )
-    );
-
-    inicializarSolucao(&solucao,(QuantidadeDeTarefas) 1);
-    solucaoDefinirTarefaNaPosicao(&solucao,(QuantidadeDeTarefas) 0,(IdentificadorDeTarefa) 1);
-
-    resultado = gerenciadorDeCustosCalcularCustoDaSolucao(
-        &instancia,
-        &solucao,
-        (DataDeEntregaComum) 10,
-        &custo
-    );
-
-    if(resultado == FALSO) {
-        printf("[ERRO] Calculo de custo zero deveria funcionar.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
+    if(gerenciadorDeCustosCalcularCustoDaSolucao(&instancia,&solucao,10,&custo) == FALSO) {
+        printf("[ERRO] Calculo de custo com melhor deslocamento falhou.\n");
         return 1;
     }
 
-    if(custo != 0) {
-        printf("[ERRO] Custo deveria ser zero quando a tarefa conclui exatamente em d.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
+    if(custo != 2) {
+        printf("[ERRO] Custo com melhor deslocamento deveria ser 2, mas foi %llu.\n",(unsigned long long) custo);
         return 1;
     }
 
-    liberarSolucao(&solucao);
-    liberarInstancia(&instancia);
-
-    printf("[OK] Custo zero quando conclui exatamente em d.\n");
+    printf("[OK] Custo com melhor deslocamento temporal.\n");
 
     return 0;
 }
 
-static int testarInstanciaNulaInvalida(void) {
+static int testarParametrosInvalidos(void) {
+    Instancia instancia;
+    Tarefa tarefas[2];
     Solucao solucao;
+    IdentificadorDeTarefa sequencia[2];
     Custo custo;
 
-    solucao = criarSolucaoVazia();
-    custo = 0;
+    montarInstanciaDeTeste(&instancia,tarefas,&solucao,sequencia);
 
-    inicializarSolucao(&solucao,(QuantidadeDeTarefas) 1);
-    solucaoDefinirTarefaNaPosicao(&solucao,(QuantidadeDeTarefas) 0,(IdentificadorDeTarefa) 1);
-
-    if(gerenciadorDeCustosCalcularCustoDaSolucao(NULL,&solucao,(DataDeEntregaComum) 10,&custo) != FALSO) {
+    if(gerenciadorDeCustosCalcularCustoDaSolucao(NULL,&solucao,10,&custo) != FALSO) {
         printf("[ERRO] Instancia NULL deveria falhar.\n");
-        liberarSolucao(&solucao);
-
         return 1;
     }
 
-    liberarSolucao(&solucao);
-
-    printf("[OK] Instancia nula invalida no gerenciador de custos.\n");
-
-    return 0;
-}
-
-static int testarSolucaoNulaInvalida(void) {
-    Instancia instancia;
-    Custo custo;
-
-    instancia = criarInstanciaVazia();
-    custo = 0;
-
-    prepararInstanciaDeTeste(&instancia);
-
-    if(gerenciadorDeCustosCalcularCustoDaSolucao(&instancia,NULL,(DataDeEntregaComum) 36,&custo) != FALSO) {
+    if(gerenciadorDeCustosCalcularCustoDaSolucao(&instancia,NULL,10,&custo) != FALSO) {
         printf("[ERRO] Solucao NULL deveria falhar.\n");
-        liberarInstancia(&instancia);
-
         return 1;
     }
 
-    liberarInstancia(&instancia);
-
-    printf("[OK] Solucao nula invalida no gerenciador de custos.\n");
-
-    return 0;
-}
-
-static int testarDataDeEntregaZeroInvalida(void) {
-    Instancia instancia;
-    Solucao solucao;
-    Custo custo;
-
-    instancia = criarInstanciaVazia();
-    solucao = criarSolucaoVazia();
-    custo = 0;
-
-    prepararInstanciaDeTeste(&instancia);
-    prepararSolucao123(&solucao);
-
-    if(gerenciadorDeCustosCalcularCustoDaSolucao(&instancia,&solucao,(DataDeEntregaComum) 0,&custo) != FALSO) {
-        printf("[ERRO] Data de entrega comum zero deveria falhar.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
-        return 1;
-    }
-
-    liberarSolucao(&solucao);
-    liberarInstancia(&instancia);
-
-    printf("[OK] Data de entrega zero invalida no gerenciador de custos.\n");
-
-    return 0;
-}
-
-static int testarPonteiroDeCustoNuloInvalido(void) {
-    Instancia instancia;
-    Solucao solucao;
-
-    instancia = criarInstanciaVazia();
-    solucao = criarSolucaoVazia();
-
-    prepararInstanciaDeTeste(&instancia);
-    prepararSolucao123(&solucao);
-
-    if(gerenciadorDeCustosCalcularCustoDaSolucao(&instancia,&solucao,(DataDeEntregaComum) 36,NULL) != FALSO) {
+    if(gerenciadorDeCustosCalcularCustoDaSolucao(&instancia,&solucao,10,NULL) != FALSO) {
         printf("[ERRO] Ponteiro de custo NULL deveria falhar.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
         return 1;
     }
 
-    liberarSolucao(&solucao);
-    liberarInstancia(&instancia);
-
-    printf("[OK] Ponteiro de custo nulo invalido no gerenciador de custos.\n");
-
-    return 0;
-}
-
-static int testarSolucaoIncompletaInvalida(void) {
-    Instancia instancia;
-    Solucao solucao;
-    Custo custo;
-
-    instancia = criarInstanciaVazia();
-    solucao = criarSolucaoVazia();
-    custo = 0;
-
-    prepararInstanciaDeTeste(&instancia);
-
-    inicializarSolucao(&solucao,(QuantidadeDeTarefas) 3);
-    solucaoDefinirTarefaNaPosicao(&solucao,(QuantidadeDeTarefas) 0,(IdentificadorDeTarefa) 1);
-    solucaoDefinirTarefaNaPosicao(&solucao,(QuantidadeDeTarefas) 1,(IdentificadorDeTarefa) 2);
-
-    if(gerenciadorDeCustosCalcularCustoDaSolucao(&instancia,&solucao,(DataDeEntregaComum) 36,&custo) != FALSO) {
-        printf("[ERRO] Solucao incompleta deveria falhar.\n");
-        liberarSolucao(&solucao);
-        liberarInstancia(&instancia);
-
-        return 1;
-    }
-
-    liberarSolucao(&solucao);
-    liberarInstancia(&instancia);
-
-    printf("[OK] Solucao incompleta invalida no gerenciador de custos.\n");
+    printf("[OK] Parametros invalidos do gerenciador de custos.\n");
 
     return 0;
 }
@@ -396,20 +130,15 @@ int main(void) {
 
     printf("Executando testes do GerenciadorDeCustos...\n\n");
 
-    quantidadeDeErros += testarCalculoDeCustoDaSolucao123();
-    quantidadeDeErros += testarCalculoDeCustoDaSolucao321();
-    quantidadeDeErros += testarCustoZeroQuandoTodasConcluemEmD();
-    quantidadeDeErros += testarInstanciaNulaInvalida();
-    quantidadeDeErros += testarSolucaoNulaInvalida();
-    quantidadeDeErros += testarDataDeEntregaZeroInvalida();
-    quantidadeDeErros += testarPonteiroDeCustoNuloInvalido();
-    quantidadeDeErros += testarSolucaoIncompletaInvalida();
+    quantidadeDeErros += testarCustoComInstanteInicialZero();
+    quantidadeDeErros += testarMelhorInstanteInicial();
+    quantidadeDeErros += testarCustoComMelhorDeslocamento();
+    quantidadeDeErros += testarParametrosInvalidos();
 
     printf("\n");
 
     if(quantidadeDeErros == 0) {
         printf("Todos os testes do GerenciadorDeCustos passaram.\n");
-
         return 0;
     }
 
