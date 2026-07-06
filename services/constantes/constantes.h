@@ -59,9 +59,12 @@ typedef double TempoComputacionalEmMilissegundos;
 #define TAMANHO_MAXIMO_DE_DESCRICAO_DE_HEURISTICA 512
 #define TAMANHO_MAXIMO_DE_NOME_DE_EXPERIMENTO 128
 #define TAMANHO_MAXIMO_DE_DESCRICAO_DE_EXPERIMENTO 512
+#define TAMANHO_MAXIMO_DE_TIPO_DE_REFERENCIA 64
+#define TAMANHO_MAXIMO_DE_VALOR_TEXTUAL 64
 
 #define CAMINHO_DA_PASTA_DE_INSTANCIAS "instancias"
 #define CAMINHO_DA_PASTA_DE_RESULTADOS "resultados"
+#define CAMINHO_DA_PASTA_DE_BENCHMARKS "benchmarks"
 
 #define NOME_ARQUIVO_SCH10 "sch10.txt"
 #define NOME_ARQUIVO_SCH20 "sch20.txt"
@@ -74,6 +77,15 @@ typedef double TempoComputacionalEmMilissegundos;
 #define NOME_ARQUIVO_RESULTADOS_EXECUCOES "resultados_execucoes.csv"
 #define NOME_ARQUIVO_MEDIAS_POR_N_H "medias_por_n_h.csv"
 #define NOME_ARQUIVO_RELATORIO_HTML "relatorio_resultados.html"
+#define NOME_ARQUIVO_REFERENCIAS_BENCHMARK "referencias_benchmark.csv"
+#define NOME_ARQUIVO_COMPARACAO_BENCHMARK "comparacao_benchmark.csv"
+
+#define TEXTO_VALOR_NA "NA"
+#define TIPO_REFERENCIA_OTIMO "otimo"
+#define TIPO_REFERENCIA_MELHOR_CONHECIDA "melhor_conhecida"
+#define TIPO_REFERENCIA_UPPER_BOUND "upper_bound"
+#define TIPO_REFERENCIA_AUTORES "autores"
+#define TIPO_REFERENCIA_DESCONHECIDO "desconhecido"
 
 #define IDENTIFICADOR_HEURISTICA_CONSTRUTIVA_FUZZY 1
 #define NOME_HEURISTICA_CONSTRUTIVA_FUZZY "Heuristica Construtiva Fuzzy de Dupla Frente Temporal"

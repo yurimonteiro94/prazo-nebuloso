@@ -12,3 +12,4 @@ resultados/*
 !resultados/.gitkeep
 .vscode/
 .idea/
+!benchmarks/*.csv
