@@ -30,3 +30,4 @@ A proposta principal e uma heuristica construtiva baseada em logica nebulosa.
 - gerenciador_fuzzy.
 - gerenciador_de_custos.
 - gerenciador_de_tempo.
+

@@ -1,6 +1,7 @@
 #include "gerenciador_de_custos.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 
 static Boolean gerenciadorDeCustosParametrosSaoValidos(const Instancia *instancia,const Solucao *solucao) {
     if(instancia == NULL) {
@@ -54,14 +55,67 @@ static const Tarefa *gerenciadorDeCustosBuscarTarefaPorIdentificador(const Insta
     return NULL;
 }
 
-Boolean gerenciadorDeCustosCalcularCustoDaSolucaoComInstanteInicial(const Instancia *instancia,const Solucao *solucao,DataDeEntregaComum dataDeEntregaComum,InteiroPositivoDe32Bits instanteInicial,Custo *custo) {
+static Boolean gerenciadorDeCustosMontarTarefasNaOrdemDaSolucao(const Instancia *instancia,const Solucao *solucao,const Tarefa **tarefasNaOrdemDaSolucao) {
     QuantidadeDeTarefas indiceDaSequencia;
     IdentificadorDeTarefa identificadorDaTarefa;
+    const Tarefa *tarefa;
+
+    if(instancia == NULL) {
+        return FALSO;
+    }
+
+    if(solucao == NULL) {
+        return FALSO;
+    }
+
+    if(tarefasNaOrdemDaSolucao == NULL) {
+        return FALSO;
+    }
+
+    for(indiceDaSequencia = 0;indiceDaSequencia < (*solucao).quantidadeDeTarefasAlocadas;indiceDaSequencia++) {
+        identificadorDaTarefa = (*solucao).sequenciaDeTarefas[indiceDaSequencia];
+        tarefa = gerenciadorDeCustosBuscarTarefaPorIdentificador(instancia,identificadorDaTarefa);
+
+        if(tarefa == NULL) {
+            return FALSO;
+        }
+
+        tarefasNaOrdemDaSolucao[indiceDaSequencia] = tarefa;
+    }
+
+    return VERDADEIRO;
+}
+
+static Custo gerenciadorDeCustosCalcularCustoComTarefasNaOrdem(const Tarefa **tarefasNaOrdemDaSolucao,QuantidadeDeTarefas quantidadeDeTarefas,DataDeEntregaComum dataDeEntregaComum,InteiroPositivoDe32Bits instanteInicial) {
+    QuantidadeDeTarefas indiceDaSequencia;
     const Tarefa *tarefa;
     InteiroPositivoDe32Bits instanteAtual;
     InteiroPositivoDe32Bits adiantamento;
     InteiroPositivoDe32Bits atraso;
     Custo custoTotal;
+
+    instanteAtual = instanteInicial;
+    custoTotal = 0;
+
+    for(indiceDaSequencia = 0;indiceDaSequencia < quantidadeDeTarefas;indiceDaSequencia++) {
+        tarefa = tarefasNaOrdemDaSolucao[indiceDaSequencia];
+        instanteAtual += (*tarefa).tempoProcessamento;
+
+        if(instanteAtual < dataDeEntregaComum) {
+            adiantamento = dataDeEntregaComum - instanteAtual;
+            custoTotal += ((Custo) (*tarefa).penalidadeAdiantamento) * ((Custo) adiantamento);
+        }
+        else if(instanteAtual > dataDeEntregaComum) {
+            atraso = instanteAtual - dataDeEntregaComum;
+            custoTotal += ((Custo) (*tarefa).penalidadeAtraso) * ((Custo) atraso);
+        }
+    }
+
+    return custoTotal;
+}
+
+Boolean gerenciadorDeCustosCalcularCustoDaSolucaoComInstanteInicial(const Instancia *instancia,const Solucao *solucao,DataDeEntregaComum dataDeEntregaComum,InteiroPositivoDe32Bits instanteInicial,Custo *custo) {
+    const Tarefa **tarefasNaOrdemDaSolucao;
 
     if(custo == NULL) {
         return FALSO;
@@ -73,39 +127,31 @@ Boolean gerenciadorDeCustosCalcularCustoDaSolucaoComInstanteInicial(const Instan
         return FALSO;
     }
 
-    instanteAtual = instanteInicial;
-    custoTotal = 0;
+    tarefasNaOrdemDaSolucao = (const Tarefa **) malloc(sizeof(Tarefa *) * (*solucao).quantidadeDeTarefasAlocadas);
 
-    for(indiceDaSequencia = 0;indiceDaSequencia < (*solucao).quantidadeDeTarefasAlocadas;indiceDaSequencia++) {
-        identificadorDaTarefa = (*solucao).sequenciaDeTarefas[indiceDaSequencia];
-        tarefa = gerenciadorDeCustosBuscarTarefaPorIdentificador(instancia,identificadorDaTarefa);
-
-        if(tarefa == NULL) {
-            return FALSO;
-        }
-
-        instanteAtual += (*tarefa).tempoProcessamento;
-
-        if(instanteAtual < dataDeEntregaComum) {
-            adiantamento = dataDeEntregaComum - instanteAtual;
-            custoTotal += ((Custo) (*tarefa).penalidadeAdiantamento) * ((Custo) adiantamento);
-        }
-
-        if(instanteAtual > dataDeEntregaComum) {
-            atraso = instanteAtual - dataDeEntregaComum;
-            custoTotal += ((Custo) (*tarefa).penalidadeAtraso) * ((Custo) atraso);
-        }
+    if(tarefasNaOrdemDaSolucao == NULL) {
+        return FALSO;
     }
 
-    (*custo) = custoTotal;
+    if(gerenciadorDeCustosMontarTarefasNaOrdemDaSolucao(instancia,solucao,tarefasNaOrdemDaSolucao) == FALSO) {
+        free(tarefasNaOrdemDaSolucao);
+        return FALSO;
+    }
+
+    (*custo) = gerenciadorDeCustosCalcularCustoComTarefasNaOrdem(tarefasNaOrdemDaSolucao,(*solucao).quantidadeDeTarefasAlocadas,dataDeEntregaComum,instanteInicial);
+
+    free(tarefasNaOrdemDaSolucao);
 
     return VERDADEIRO;
 }
 
 Boolean gerenciadorDeCustosEncontrarMelhorInstanteInicialDaSolucao(const Instancia *instancia,const Solucao *solucao,DataDeEntregaComum dataDeEntregaComum,InteiroPositivoDe32Bits *melhorInstanteInicial) {
-    InteiroPositivoDe32Bits instanteInicial;
+    const Tarefa **tarefasNaOrdemDaSolucao;
+    QuantidadeDeTarefas indiceDaSequencia;
+    InteiroPositivoDe32Bits instanteInicialCandidato;
     InteiroPositivoDe32Bits melhorInstanteInicialAtual;
-    Custo custoAtual;
+    InteiroPositivoDe32Bits somaPrefixadaDosTempos;
+    Custo custoCandidato;
     Custo melhorCusto;
 
     if(melhorInstanteInicial == NULL) {
@@ -118,24 +164,39 @@ Boolean gerenciadorDeCustosEncontrarMelhorInstanteInicialDaSolucao(const Instanc
         return FALSO;
     }
 
-    melhorInstanteInicialAtual = 0;
+    tarefasNaOrdemDaSolucao = (const Tarefa **) malloc(sizeof(Tarefa *) * (*solucao).quantidadeDeTarefasAlocadas);
 
-    if(gerenciadorDeCustosCalcularCustoDaSolucaoComInstanteInicial(instancia,solucao,dataDeEntregaComum,0,&melhorCusto) == FALSO) {
+    if(tarefasNaOrdemDaSolucao == NULL) {
         return FALSO;
     }
 
-    for(instanteInicial = 1;instanteInicial <= dataDeEntregaComum;instanteInicial++) {
-        if(gerenciadorDeCustosCalcularCustoDaSolucaoComInstanteInicial(instancia,solucao,dataDeEntregaComum,instanteInicial,&custoAtual) == FALSO) {
-            return FALSO;
-        }
+    if(gerenciadorDeCustosMontarTarefasNaOrdemDaSolucao(instancia,solucao,tarefasNaOrdemDaSolucao) == FALSO) {
+        free(tarefasNaOrdemDaSolucao);
+        return FALSO;
+    }
 
-        if(custoAtual < melhorCusto) {
-            melhorCusto = custoAtual;
-            melhorInstanteInicialAtual = instanteInicial;
+    melhorInstanteInicialAtual = 0;
+    melhorCusto = gerenciadorDeCustosCalcularCustoComTarefasNaOrdem(tarefasNaOrdemDaSolucao,(*solucao).quantidadeDeTarefasAlocadas,dataDeEntregaComum,0);
+
+    somaPrefixadaDosTempos = 0;
+
+    for(indiceDaSequencia = 0;indiceDaSequencia < (*solucao).quantidadeDeTarefasAlocadas;indiceDaSequencia++) {
+        somaPrefixadaDosTempos += (*tarefasNaOrdemDaSolucao[indiceDaSequencia]).tempoProcessamento;
+
+        if(somaPrefixadaDosTempos <= dataDeEntregaComum) {
+            instanteInicialCandidato = dataDeEntregaComum - somaPrefixadaDosTempos;
+            custoCandidato = gerenciadorDeCustosCalcularCustoComTarefasNaOrdem(tarefasNaOrdemDaSolucao,(*solucao).quantidadeDeTarefasAlocadas,dataDeEntregaComum,instanteInicialCandidato);
+
+            if(custoCandidato < melhorCusto) {
+                melhorCusto = custoCandidato;
+                melhorInstanteInicialAtual = instanteInicialCandidato;
+            }
         }
     }
 
     (*melhorInstanteInicial) = melhorInstanteInicialAtual;
+
+    free(tarefasNaOrdemDaSolucao);
 
     return VERDADEIRO;
 }

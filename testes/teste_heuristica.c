@@ -85,19 +85,19 @@ static int testarCriacaoDaHeuristicaConstrutivaFuzzy(void) {
     heuristica = criarHeuristicaConstrutivaFuzzy();
 
     if(heuristica.identificadorDaHeuristica != IDENTIFICADOR_HEURISTICA_CONSTRUTIVA_FUZZY) {
-        printf("[ERRO] Identificador da heuristica construtiva fuzzy incorreto.\n");
+        printf("[ERRO] Identificador da heuristica construtiva por arbitragem temporal preditiva incorreto.\n");
 
         return 1;
     }
 
     if(strcmp(heuristica.nomeDaHeuristica,NOME_HEURISTICA_CONSTRUTIVA_FUZZY) != 0) {
-        printf("[ERRO] Nome da heuristica construtiva fuzzy incorreto.\n");
+        printf("[ERRO] Nome da heuristica construtiva por arbitragem temporal preditiva incorreto.\n");
 
         return 1;
     }
 
     if(strcmp(heuristica.descricaoDaHeuristica,DESCRICAO_HEURISTICA_CONSTRUTIVA_FUZZY) != 0) {
-        printf("[ERRO] Descricao da heuristica construtiva fuzzy incorreta.\n");
+        printf("[ERRO] Descricao da heuristica construtiva por arbitragem temporal preditiva incorreta.\n");
 
         return 1;
     }
@@ -108,7 +108,7 @@ static int testarCriacaoDaHeuristicaConstrutivaFuzzy(void) {
         return 1;
     }
 
-    printf("[OK] Criacao da heuristica construtiva fuzzy.\n");
+    printf("[OK] Criacao da heuristica construtiva por arbitragem temporal preditiva.\n");
 
     return 0;
 }
